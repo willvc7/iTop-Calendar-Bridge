@@ -16,11 +16,12 @@ def setup_logger(log_dir: str = "logs", prefix: str = "app") -> Path:
 
     if not _initialized:
         logger.remove()
-        logger.add(
-            sys.stdout,
-            format="<green>{time:YYYY-MM-DD HH:mm:ss}</green> | <level>{level: <8}</level> | <cyan>{function}</cyan>:{line} <level>{message}</level>",
-            level="INFO",
-        )
+        if sys.stdout is not None:
+            logger.add(
+                sys.stdout,
+                format="<green>{time:YYYY-MM-DD HH:mm:ss}</green> | <level>{level: <8}</level> | <cyan>{function}</cyan>:{line} <level>{message}</level>",
+                level="INFO",
+            )
         logger.add(
             str(log_file),
             rotation="10 MB",

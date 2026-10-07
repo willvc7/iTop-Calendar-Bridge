@@ -20,7 +20,9 @@
 [Setup]
 AppName={#MyAppName}
 AppVersion={#MyAppVersion}
-DefaultDirName={autopf}\{#MyAppName}
+SetupIconFile=assets\app.ico
+; per-user 安裝免管理員：裝進 LocalAppData\Programs（先前 autopf 需管理員權限，與 lowest 矛盾，已修正）
+DefaultDirName={localappdata}\Programs\{#MyAppName}
 PrivilegesRequired=lowest
 OutputDir=installer-output
 OutputBaseFilename={#MyAppName}-Setup-{#MyAppVersion}

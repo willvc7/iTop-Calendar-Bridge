@@ -14,7 +14,7 @@ from loguru import logger
 
 from core.settings import settings
 from core.logging_setup import setup_logger
-from core.paths import configure_frozen_runtime
+from core.paths import bundle_root, configure_frozen_runtime
 from ui.theme import BG, MUTED, apply_style
 from ui.widgets import DatePicker, ask_cache_save_path, ask_open_path, ask_save_path, validate_date_range
 from ui.logpanel import LogPanel, log_section
@@ -35,8 +35,13 @@ def _keyring_status(username: str = "", url: str = "") -> str:
 def stage1_job(start: str, end: str, out: str, send_mail: bool) -> tuple:
     """階段一【匯出行事曆】工作"""
     from stages.stage1_calendar import fetch_outlook_calendar
-    events = fetch_outlook_calendar(start, end, out, send_mail)
-    suffix = "（已寄信）" if send_mail else "（未寄信）"
+    events, mailed = fetch_outlook_calendar(start, end, out, send_mail)
+    if mailed:
+        suffix = "（已寄信）"
+    elif events:
+        suffix = "（未寄信）"
+    else:
+        suffix = "（無行程未寄信）"
     return True, f"【匯出行事曆】已完成：{len(events)} 筆{suffix}"
 
 
@@ -90,17 +95,26 @@ def _record_output_path(path: str) -> None:
 
 def main() -> None:
     setup_logger()
-    configure_frozen_runtime()  # exe 模式：補上隨附 Chromium 路徑（原始碼模式無動作）
+    configure_frozen_runtime()
 
     try:
         root = tk.Tk()
     except Exception as e:
-        print(f"無法開啟設定視窗（需要桌面 GUI 環境）: {e}")
-        print("請改用文字編輯器直接修改 config/config.yaml（格式見 config.example.yaml）。")
+        try:
+            print(f"無法開啟設定視窗（需要桌面 GUI 環境）: {e}")
+            print("請改用文字編輯器直接修改 config/config.yaml（格式見 config.example.yaml）。")
+        except Exception:
+            pass
         return
     root.title("iTop-Calendar-Bridge")
     root.minsize(940, 432)
     root.configure(background=BG)
+    try:  # 視窗圖示：缺檔也不影響啟動
+        _icon = bundle_root() / "assets" / "app.ico"
+        if _icon.exists():
+            root.iconbitmap(str(_icon))
+    except Exception:
+        pass
 
     try:
         root.state("zoomed")

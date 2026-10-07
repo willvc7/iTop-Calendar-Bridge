@@ -15,13 +15,13 @@
 
 ```text
 iTop-Calendar-Bridge/
-├── app.py                  # GUI 主控視窗（組裝 ui/ + stages/）
-├── ui/                     # 視窗子模組（theme、widgets、logpanel）
-├── stages/                 # 三段式業務管線（stage1_calendar、sync_requests、stage3_upload），CLI 可單獨跑
-├── core/                   # 共用核心（settings、credentials、files、uploader、jobs、mailer、paths、logging_setup）
-├── tests/                  # unittest 測試套件（標準庫，免裝依賴）
-├── config/                 # config.yaml（每人一份，勿提交）+ config.example.yaml（範本）
-├── data/                   # 輸出入（raw_calendar.csv、itop_data.json）
+├── app.py                  # GUI 主控視窗
+├── ui/                     # 視窗子模組
+├── stages/                 # 三段式業務管線，CLI 可單獨跑
+├── core/                   # 共用核心
+├── tests/                  # unittest 測試套件
+├── config/                 # config.yaml（每人一份）+ config.example.yaml（範本）
+├── data/                   # 輸出入
 └── logs/                   # app_*.log + upload_*.csv + Log.csv（累積總帳）
 ```
 
@@ -45,7 +45,7 @@ uv run playwright install chromium
 copy config\config.example.yaml config\config.yaml
 ```
 
-設定單一來源 `config/config.yaml`（每人一份，勿提交）；對照表單一來源 `data/itop_data.json`。
+設定單一來源 `config/config.yaml`（每人一份）；對照表單一來源 `data/itop_data.json`。
 
 ## 使用指南
 
@@ -99,7 +99,8 @@ uvx ruff check .                           # 需網路裝 ruff；規則見 ruff.
 ```bash
 uv sync
 pyinstaller app.spec            # 產出 dist/iTop-Calendar-Bridge/
-# 準備 Chromium（二擇一）：set PLAYWRIGHT_BROWSERS_PATH=<repo>\ms-playwright 後 playwright install chromium，
+# 準備 Chromium（二擇一）：
+# set PLAYWRIGHT_BROWSERS_PATH=<repo>\ms-playwright 後 playwright install chromium，
 # 或直接複製既有瀏覽器目錄為 ms-playwright\
 # 再以 Inno Setup 編譯 installer.iss → installer-output\*-Setup-*.exe（單一安裝檔）
 ```

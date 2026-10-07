@@ -3,7 +3,7 @@
 再用 installer.iss 包成單一 Setup.exe。建置：pyinstaller app.spec
 注意：dist/、*.exe 不上 GitHub（見 .gitignore）。
 
-依賴現況（已驗證才敢這樣寫）：
+依賴現況：
 - pandas / numpy / playwright：套件自帶 PyInstaller hook，無需額外處理。
 - tkinter：PyInstaller 內建 hook。
 - datas 為空：執行期不需要隨附資料檔（config 缺檔會用內建預設值自動播種）。
@@ -18,11 +18,14 @@ a = Analysis(
     ["app.py"],
     pathex=[],
     binaries=[],
-    datas=[],
+    # 視窗圖示隨包（frozen 經 bundle_root() 取用，見 app.main）
+    datas=[("assets/app.ico", "assets")],
     hiddenimports=[
         # keyring 用 entry points 找後端，打包時抓不到；Windows 只需這一個。
         # 首包煙霧測試必須驗證「密碼存取」正常；若失敗再加 copy_metadata("keyring")。
         "keyring.backends.Windows",
+        # pywin32 在 COM 日期轉換時動態載入，靜態掃不到；缺了行事曆解析全跳過。
+        "win32timezone",
     ],
     hookspath=[],
     hooksconfig={},
@@ -41,6 +44,7 @@ exe = EXE(
     [],
     exclude_binaries=True,
     name="iTop-Calendar-Bridge",
+    icon="assets/app.ico",
     debug=False,
     bootloader_ignore_signals=False,
     strip=False,

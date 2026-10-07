@@ -89,6 +89,7 @@ def fetch_outlook_calendar(start_str: str, end_str: str, output_filename: str = 
     :param end_str: 結束時間，格式例如 "2026-09-10 23:59"
     :param output_filename: 輸出的 CSV 檔名（保持舊預設 my_calendar.csv 不破壞現行）
     :param send_mail: None 則讀 settings.send_mail；False 僅匯出不寄（開發預設）；True 才真寄
+    :return: (events, mailed)，mailed 表示是否真的寄出（無行程或未勾選則為 False）
     """
     _ensure_logger()
     logger.info("準備連線至 Outlook 應用程式")
@@ -114,15 +115,15 @@ def fetch_outlook_calendar(start_str: str, end_str: str, output_filename: str = 
             logger.success(f"已匯出至：{display_path(output_filename)}")
 
             if not send_mail:
-                return event_list
+                return event_list, False
 
             logger.info("準備將檔案寄給自己")
             from core.mailer import mail_calendar_csv
-            mail_calendar_csv(output_filename, start_str, end_str)
+            mailed = mail_calendar_csv(output_filename, start_str, end_str)
+            return event_list, mailed
 
-        else:
-            logger.warning("在指定的區間內沒有找到任何行程")
-        return event_list
+        logger.warning("在指定的區間內沒有找到任何行程")
+        return [], False
 
     except Exception as e:
         logger.exception(f"發生未預期的錯誤: {e}")

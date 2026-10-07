@@ -1,0 +1,4 @@
+# Windows-only 團隊：統一換行處理，避免 CRLF 噪音
+* text=auto
+*.ico binary
+*.png binary

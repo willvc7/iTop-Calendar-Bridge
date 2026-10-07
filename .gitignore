@@ -1,0 +1,33 @@
+# Python-generated files
+__pycache__/
+*.py[oc]
+build/
+dist/
+wheels/
+*.egg-info
+
+# PyInstaller / Inno Setup（建置產物不上版控，spec/iss 腳本除外）
+*.exe
+ms-playwright/
+installer-output/
+
+# Virtual environments
+.venv
+
+# Logs - per-run single file, do not commit
+logs/
+*.log
+voice_gen.log
+
+# Per-user config - only example is committed for sharing
+config/config.yaml
+/config.yaml
+
+# Per-user data - request cache + calendar CSVs (privacy + per-user)
+data/*.csv
+data/*.json
+itop_data.json
+Log.csv
+my_calendar.csv
+raw_calendar.csv
+iTop.csv

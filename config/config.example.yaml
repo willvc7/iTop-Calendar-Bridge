@@ -1,0 +1,15 @@
+headless: true
+username: ''
+itop_url: ''
+create_TimeSpent: c[menu]=MyTimeTrackingReport&operation=new&class=TimeSpent
+request_list: c[menu]=internal:Requestassignedtome, c[menu]=internal:Requestscreatedbymyself,
+  c[menu]=UserRequest:Requests_assigned_to_me-2
+file_encoding: utf-8-sig
+required_fields: Request, Date, StartTime, EndTime, Description
+send_mail: false
+send_cache_mail: false
+calendar_output: data/raw_calendar.csv
+calendar_start: ''
+calendar_end: ''
+request_cache: data/itop_data.json
+upload_input: iTop.csv
